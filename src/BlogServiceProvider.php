@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace DrewRoberts\Blog;
 
-use DrewRoberts\Blog\Http\Middleware\ServeBlog;
 use DrewRoberts\Blog\Models\Page;
 use DrewRoberts\Blog\Models\Post;
 use DrewRoberts\Blog\Models\Series;
@@ -14,7 +13,6 @@ use DrewRoberts\Blog\Policies\PostPolicy;
 use DrewRoberts\Blog\Policies\SeriesPolicy;
 use DrewRoberts\Blog\Policies\TopicPolicy;
 use DrewRoberts\Blog\ViewCreators\LayoutViewCreator;
-use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use Tipoff\Support\TipoffPackage;
@@ -48,15 +46,6 @@ class BlogServiceProvider extends TipoffServiceProvider
         parent::bootingPackage();
 
         Route::model('post', Post::class);
-
-        if (app()->runningInConsole() && ! app()->runningUnitTests()) {
-            // Really just so route will appear in artisan route:list
-            app()->booted(ServeBlog::blogRoutes());
-        }
-
-        // Middleware to support dynamic registration if NOT a Nova request
-        $this->app->make(HttpKernel::class)
-            ->pushMiddleware(ServeBlog::class);
 
         View::creator('*', LayoutViewCreator::class);
     }
