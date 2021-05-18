@@ -17,6 +17,7 @@ use DrewRoberts\Blog\ViewCreators\LayoutViewCreator;
 use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
+use Laravel\Nova\Nova;
 use Tipoff\Support\TipoffPackage;
 use Tipoff\Support\TipoffServiceProvider;
 
@@ -46,6 +47,11 @@ class BlogServiceProvider extends TipoffServiceProvider
     public function bootingPackage()
     {
         parent::bootingPackage();
+
+        Nova::serving(function () {
+            Nova::script('text-copy', __DIR__.'/../dist/js/field.js');
+            Nova::style('text-copy', __DIR__.'/../dist/css/field.css');
+        });
 
         Route::model('post', Post::class);
 

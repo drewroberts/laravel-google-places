@@ -2,6 +2,7 @@
 
 namespace DrewRoberts\Blog\Nova;
 
+use DrewRoberts\Blog\Nova\Fields\TextCopy;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
@@ -12,7 +13,6 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
-use Sixlive\TextCopy\TextCopy;
 use Tipoff\Support\Enums\LayoutType;
 use Tipoff\Support\Nova\BaseResource;
 
@@ -62,7 +62,7 @@ class Post extends BaseResource
             Slug::make('Slug')->from('Title'),
             TextCopy::make('Link',  function () {
                 return config('app.url') . config('tipoff.web.uri_prefix') . $this->path;
-            })->hideWhenCreating()->hideWhenUpdating(),
+            })->hideWhenCreating()->hideWhenUpdating()->asHtml(),
             nova('layout') ? BelongsTo::make('Layout', 'layout', nova('layout'))->nullable() : null,
             DateTime::make('Published', 'published_at'),
             Markdown::make('Content')->help(
